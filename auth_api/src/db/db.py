@@ -16,23 +16,23 @@ class Database:
     def create_tables(self):
         try:
             with self.engine.begin() as conn:
-                print("Criando tabelas...")
+                print("Creating tables...")
                 Base.metadata.create_all(bind=conn)
-                print("Tabelas criadas com sucesso.")
+                print("Tables sucessfully created")
                 conn.commit()  # Commit explícito após a criação
         except Exception as e:
-            print(f"Erro ao criar tabelas: {e}")
+            print(f"Error on tables creation: {e}")
         self.test_connection()
 
     def test_connection(self):
         try:
             with self.engine.connect() as conn:
-                print(f"Conectado ao banco: {conn.engine.url.database}")
+                print(f"Connecting to db: {conn.engine.url.database}")
                 inspector = inspect(self.engine)
-                print(f"Tabelas existentes: {inspector.get_table_names()}")
+                print(f"Existing tables: {inspector.get_table_names()}")
                 schemas = inspector.get_schema_names()
-                print(f"Schemas disponíveis: {schemas}")
+                print(f"Schemas avaliable: {schemas}")
                 tabelas = inspector.get_table_names(schema="public")
-                print(f"Tabelas no schema 'public': {tabelas}")
+                print(f"Tables on schema 'public': {tabelas}")
         except Exception as e:
-            print(f"Erro ao conectar no banco: {e}")
+            print(f"Error on db connection: {e}")
