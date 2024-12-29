@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from ..service.task_service import TaskService
-from src.db.db import Database
-from src.entities.models import Task
+from src.entities.schemas import Task
 
 task_service = TaskService()
 
@@ -19,9 +18,9 @@ def get_task_by_id(id : int):
     return task
 
 @tasks_router.post("/task", tags=["task"])
-def create_task(title : str, description : str, amount : float, reward : str, user_id : int):
+def create_task(task : Task):
     try:
-        task_service.create_task(title=title, description=description, amount=amount, reward=reward, user_id=user_id)
+        task_service.create_task(task)
     except ValueError as ve:
         raise HTTPException(status_code=404, detail=ve.args[0])
     return "ok"

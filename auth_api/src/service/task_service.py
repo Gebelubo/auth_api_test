@@ -1,13 +1,13 @@
 from ..db.task_repository import TaskRepository
-from ..entities.models import Task
+from src.entities.schemas import Task
+from src.utils.conversions import task_to_db
 
 class TaskService:
     def __init__(self):
         self.task_repository = TaskRepository()
 
-    def create_task(self, title: str, description: str, amount : float, reward : str, user_id : int):
-        task = Task(title=title, description=description, amount=amount, reward=reward, user_id=user_id)
-        self.task_repository.add_task(task)
+    def create_task(self, task : Task):
+        self.task_repository.add_task(task_to_db(task))
 
     def add_task(self, task : Task):
         self.task_repository.add_task(task)

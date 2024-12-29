@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from ..service.user_service import UserService
-from src.db.db import Database
+from src.entities.schemas import User
 
 user_service = UserService()
 
@@ -18,8 +18,8 @@ def get_user_by_id(id : int):
     return user
 
 @users_router.post("/user", tags=["user"])
-def create_user(name: str, email : str):
-    user_service.create_user(name=name, email=email)
+def create_user(user : User):
+    user_service.create_user(user)
     return "ok"
 
 @users_router.delete("/user/{id}", tags=["user"])
@@ -32,3 +32,8 @@ def delete_user(id : int):
 @users_router.get("/user/{id}/tasks", tags=["user"])
 def get_tasks_from_user(id : int):
     return user_service.get_tasks_from_user(id)
+
+@users_router.put("/user/{id}", tags=["user"])
+def update_user(id : int, name : str, email : str):
+    user_service.update_user(id, name, email)
+    return "ok"
