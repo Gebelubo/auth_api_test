@@ -1,3 +1,5 @@
 import os
 
 DATABASE_URL = os.getenv("DATABASE_URL")
+SECRET_KEY = '27eb271a73d21ea60d7d3de18b503dccd2228bb36ceb95cf7d43d1c13b9ca113'
+ALGORITHM = 'HS256'

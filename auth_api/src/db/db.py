@@ -7,7 +7,7 @@ from src.entities.models import Base
 
 class Database:
     def __init__(self):
-        self.engine = create_engine(DATABASE_URL, echo=True)  # 'echo=True' para log de SQL
+        self.engine = create_engine(DATABASE_URL, echo=True)  
         self.Session = sessionmaker(bind=self.engine)
     
     def get_session(self):
@@ -19,7 +19,7 @@ class Database:
                 print("Creating tables...")
                 Base.metadata.create_all(bind=conn)
                 print("Tables sucessfully created")
-                conn.commit()  # Commit explícito após a criação
+                conn.commit()  
         except Exception as e:
             print(f"Error on tables creation: {e}")
         self.test_connection()

@@ -1,6 +1,8 @@
 from ..db.db import Database
 from sqlalchemy.orm import sessionmaker
 from ..entities.models import UserDB, TaskDB
+from fastapi.exceptions import HTTPException
+from fastapi import status
 
 class UserRepository:
     def __init__(self):
@@ -49,8 +51,11 @@ class UserRepository:
             session.close()
 
     def get_tasks_from_user(self, id : int):
-        session = self.db.get_session()
-        tasks = session.query(TaskDB).filter(TaskDB.user_id == id).all()
+        try:
+            session = self.db.get_session()
+            tasks = session.query(TaskDB).filter(TaskDB.user_id == id).all()
+        finally:
+            session.close()
         return tasks
     
     def update_user(self, id : int, name : str, username : str, password : str, email : str):
@@ -68,5 +73,15 @@ class UserRepository:
             raise e
         finally:
             session.close()
+
+    def get_user_by_username(self, username : str):
+        session = self.db.get_session()
+        user = session.query(UserDB).filter(UserDB.username == username).first()
+        if not user:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'user with username {username} not found')
+        return user
+
+
+
     
 

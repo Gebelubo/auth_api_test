@@ -16,3 +16,7 @@ class Task(BaseModel):
     user_id : int
 
     model_config = ConfigDict(from_attributes=True)
+
+class AuthUser(BaseModel):
+    username: str
+    password : str
