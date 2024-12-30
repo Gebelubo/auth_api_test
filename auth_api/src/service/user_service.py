@@ -60,3 +60,14 @@ class UserService:
             'access_token' : access_token,
             'exp' : exp.isoformat()
              }
+    
+    def verify_token(self, access_token : str):
+        try:
+            data = jwt.decode(access_token, SECRET_KEY, algorithms=[ALGORITHM])
+        except JWTError as je:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='invalid access token')
+        
+        user_on_db = self.user_repository.get_user_by_username(data['sub'])
+
+        if not user_on_db:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='invalid access token')

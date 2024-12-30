@@ -3,10 +3,12 @@ from ..service.user_service import UserService
 from src.entities.schemas import User, AuthUser
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.responses import JSONResponse
+from src.utils.depends import token_verify
 
 user_service = UserService()
 
 users_router = APIRouter(prefix='/user')
+auth_router = APIRouter(prefix='/verify', dependencies=[Depends(token_verify)])
 
 @users_router.get("/get", tags=["user"])
 def list_users():
@@ -44,8 +46,12 @@ def update_user(id : int, name : str, email : str):
 def get_user_by_username(username : str):
     return user_service.get_user_by_username(username)
 
-@users_router.post("/login", tags=["user"])
+@users_router.post("/login", tags=["login"])
 def user_login(request_form_user : OAuth2PasswordRequestForm = Depends()):
     user = AuthUser(username=request_form_user.username, password=request_form_user.password)
     auth_data = user_service.user_login(user)
     return JSONResponse(content=auth_data, status_code=status.HTTP_200_OK)
+
+@auth_router.get("", tags=["login"])
+def verify_token():
+    return "It works"
