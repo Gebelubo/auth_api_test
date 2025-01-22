@@ -9,9 +9,6 @@ class TaskService:
     def create_task(self, task : Task):
         self.task_repository.add_task(task_to_db(task))
 
-    def add_task(self, task : Task):
-        self.task_repository.add_task(task)
-
     def get_task(self, task_id: int):
         return self.task_repository.get_task_by_id(task_id)
 

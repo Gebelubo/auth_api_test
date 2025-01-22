@@ -64,10 +64,28 @@ class UserService:
     def verify_token(self, access_token : str):
         try:
             data = jwt.decode(access_token, SECRET_KEY, algorithms=[ALGORITHM])
-        except JWTError as je:
+        except JWTError:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='invalid access token')
         
         user_on_db = self.user_repository.get_user_by_username(data['sub'])
 
         if not user_on_db:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='invalid access token')
+        
+    def verify_token_admin(self, access_token : str):
+        try:
+            data = jwt.decode(access_token, SECRET_KEY, algorithms=[ALGORITHM])
+        except JWTError:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='invalid access token')
+        
+        username = data['sub']
+        user_on_db = self.user_repository.get_user_by_username(username)
+
+        if not user_on_db:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='invalid access token')
+        
+        if username != 'admin':
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='invalid access token')
+        
+    def get_guilds_from_user(self, id : int):
+        return self.user_repository.get_guilds_from_user(id)

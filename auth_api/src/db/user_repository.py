@@ -1,6 +1,6 @@
 from ..db.db import Database
 from sqlalchemy.orm import sessionmaker
-from ..entities.models import UserDB, TaskDB
+from ..entities.models import UserDB, TaskDB, GuildDB
 from fastapi.exceptions import HTTPException
 from fastapi import status
 
@@ -58,6 +58,14 @@ class UserRepository:
             session.close()
         return tasks
     
+    def get_guilds_from_user(self, id : int):
+        try:
+            session = self.db.get_session()
+            guilds = session.query(GuildDB).filter(GuildDB.user_id == id).all()
+        finally:
+            session.close()
+        return guilds
+
     def update_user(self, id : int, name : str, username : str, password : str, email : str):
         try:
             session = self.db.get_session()

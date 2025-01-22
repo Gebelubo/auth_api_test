@@ -3,23 +3,28 @@ from ..service.user_service import UserService
 from src.entities.schemas import User, AuthUser
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.responses import JSONResponse
-from src.utils.depends import token_verify
+from src.utils.depends import token_verify, token_verify_admin
 
 user_service = UserService()
 
 users_router = APIRouter(prefix='/user')
 auth_router = APIRouter(prefix='/verify', dependencies=[Depends(token_verify)])
+adm_router = APIRouter(prefix='/admin', dependencies=[Depends(token_verify_admin)])
 
-@users_router.get("/get", tags=["user"])
+@adm_router.get("/get", tags=["user"])
 def list_users():
     return user_service.get_all_users()
 
-@users_router.get("/get/id/{id}", tags=["user"])
+@adm_router.get("/get/id/{id}", tags=["user"])
 def get_user_by_id(id : int):
     user = user_service.get_user(id)
     if not user:
         raise HTTPException(status_code=404, detail=f"user with id: {id} not found")
     return user
+
+@users_router.get("/get/id/{id}/guild")
+def get_guilds_from_user(id : int):
+    return user_service.get_guilds_from_user(id)
 
 @users_router.post("/register", tags=["user"])
 def create_user(user : User):

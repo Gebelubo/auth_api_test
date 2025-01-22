@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from src.routers.user_router import users_router, auth_router
+from src.routers.user_router import users_router, auth_router, adm_router
 from src.routers.task_router import tasks_router
+from src.routers.guild_router import guild_router
 from src.db.db import Database
 
 db = Database()
@@ -20,5 +21,6 @@ def health_check():
 
 app.include_router(users_router)
 app.include_router(tasks_router)
+app.include_router(guild_router)
 app.include_router(auth_router)
-
+app.include_router(adm_router)
