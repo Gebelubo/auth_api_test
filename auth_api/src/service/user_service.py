@@ -87,5 +87,12 @@ class UserService:
         if username != 'admin':
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='invalid access token')
         
+    def get_user_from_token(self, token: str):
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_username = payload.get("sub") 
+        if not user_username:
+            return None
+        return self.get_user_by_username(user_username)
+        
     def get_guilds_from_user(self, id : int):
         return self.user_repository.get_guilds_from_user(id)

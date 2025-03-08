@@ -55,7 +55,6 @@ class GuildRepository:
             return []
         finally:
             session.close()
-        return users
     
     def add_user_to_guild(self, guild_id: int, user_id: int):
         session = self.db.get_session()

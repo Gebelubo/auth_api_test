@@ -36,3 +36,4 @@ class Database:
                 print(f"Tables on schema 'public': {tabelas}")
         except Exception as e:
             print(f"Error on db connection: {e}")
+

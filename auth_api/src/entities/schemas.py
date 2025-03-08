@@ -1,6 +1,7 @@
 from pydantic import BaseModel, ConfigDict, field_validator
+from typing import Optional
 import re
-from typing import List
+import datetime
 
 class User(BaseModel):
     name : str
@@ -20,12 +21,13 @@ class User(BaseModel):
 
 
 class Task(BaseModel):
-    title : str
-    description : str
-    amount : float
-    reward : str
-    user_id : int
-
+    title: str
+    description: str
+    amount: float
+    reward: str
+    continuous: bool = False
+    limit: Optional[int]
+    user_id: int
     model_config = ConfigDict(from_attributes=True)
 
 class Guild(BaseModel):
